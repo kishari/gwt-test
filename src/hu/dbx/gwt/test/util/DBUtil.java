@@ -1,5 +1,7 @@
 package hu.dbx.gwt.test.util;
 
+import hu.dbx.gwt.test.shared.ProductInfo;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,34 +12,48 @@ import java.util.List;
 
 public class DBUtil {
  // selects
-    private static final String GET_CONTACTS = "select Name, Age from myDataBase.templates";
+    private static final String GET_CONTACTS = "select name, description from flipfop.templates";
     
     private String databaseInfo;
     
-    public DBUtil(String databaseInfo) {
-    	this.databaseInfo = databaseInfo;
+    private Connection connection = null;
+    
+    public DBUtil() {
+    	
+    }
+    
+    public boolean connect(String databaseInfo) {
+    	try {
+			connection = getConnection(databaseInfo);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	if (connection != null) {
+        	return true;
+    	}
+    	return false;
     }
  
-    public List<String> getRows() {
+    public List<ProductInfo> getRows() {
 
-        Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<String> ret = new ArrayList<String>();
+        List<ProductInfo> ret = new ArrayList<ProductInfo>();
+        
+        if (connection == null) {    }
+        
         try {
-				conn = getConnection(databaseInfo);
-			
-            if (conn == null) {
-            	ret.add("Connection refused!");
-            	return ret;
-            }
-    
-            pstmt = conn.prepareStatement(GET_CONTACTS);
+        	
+            pstmt = connection.prepareStatement(GET_CONTACTS);
             
             rs = pstmt.executeQuery();
             while (rs.next()) {
-            	String temp = rs.getString(1) + " " + rs.getInt(2);
-            	ret.add(temp);
+            	 ProductInfo temp = new ProductInfo();
+            	 temp.setProductCode(rs.getString(1));
+            	 temp.setDescription(rs.getString(2));
+            	 
+            	 ret.add(temp);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,18 +61,11 @@ public class DBUtil {
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ignore) {
-                }
+                } catch (SQLException ignore) { }
             if (pstmt != null)
                 try {
                     pstmt.close();
-                } catch (SQLException ignore) {
-                }
-            if (conn != null)
-                try {
-                    conn.close();
-                } catch (SQLException ignore) {
-                }
+                } catch (SQLException ignore) {  }
         }
         
         return ret;
@@ -72,7 +81,6 @@ public class DBUtil {
         String pass = data[1];
         String db = data[2];
         String hostport = data[3];
-//        hostport = "localhost";
         String url = "jdbc:mysql://" + hostport + "/";
         url = url + db;
         String driver = "com.mysql.jdbc.Driver";

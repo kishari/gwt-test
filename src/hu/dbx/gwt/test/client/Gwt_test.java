@@ -1,25 +1,21 @@
 package hu.dbx.gwt.test.client;
 
+import java.util.List;
+
+import hu.dbx.gwt.test.client.component.MainWidget;
+import hu.dbx.gwt.test.shared.ProductInfo;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -36,98 +32,25 @@ public class Gwt_test implements EntryPoint {
 	private final TestServiceAsync testService = GWT
 			.create(TestService.class);
 
-	private Button sendButton;
-	private Button connectButton;
 	private Button closeButton;
-	private TextBox userNameField;
-	private TextBox databaseNameField;
-	private PasswordTextBox passwdField;
-	private ListBox hostList;
-	private Label textToServerLabel;
 	private HTML serverResponseLabel;
 	private VerticalPanel dialogVPanel;
-	private HorizontalSplitPanel mainPanel;
+	private MainWidget main;
 	
 	private DialogBox dialogBox;
 	
 	public void onModuleLoad() {
 		
 		init();
-		createDialogBox();
+		connectToServer();
 		
 	}
 	
 	private void init() {
-		sendButton = new Button("Send");
-		// We can add style names to widgets
-		sendButton.addStyleName("button");
-		sendButton.setEnabled(false);
-		sendButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				sendRecord();
-			}
-		});
+		createDialogBox();
 		
-		connectButton = new Button("Connect");
-		connectButton.addStyleName("button");
-		connectButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				connectToServer();
-			}
-		});
-		
-		userNameField = new TextBox();
-		userNameField.setText("root");
-		
-		databaseNameField = new TextBox();
-		databaseNameField.setText("myDataBase");
-		
-		passwdField = new PasswordTextBox();
-		passwdField.setText("root");
-		
-		hostList = new ListBox();
-		hostList.addItem("localhost", "localhost:3306");
-		hostList.addItem("egyéb(nem használt)", "");
-		
-		Label userNameLabel = new Label();
-		userNameLabel.setText("user: ");
-		Label passwdLabel = new Label();
-		passwdLabel.setText("pass: ");
-		Label dbNameLabel = new Label();
-		dbNameLabel.setText("database name: ");
-		
-		FlowPanel connectPanel = new FlowPanel();
-		connectPanel.add(userNameLabel);
-		connectPanel.add(userNameField);
-		connectPanel.add(passwdLabel);
-		connectPanel.add(passwdField);
-		connectPanel.add(dbNameLabel);
-		connectPanel.add(databaseNameField);
-		connectPanel.add(hostList);
-		connectPanel.add(connectButton);
-		
-		TextBox name = new TextBox();
-		TextBox age = new TextBox();
-		Label nameLabel = new Label();
-		nameLabel.setText("name:");
-		Label ageLabel = new Label();
-		ageLabel.setText("age:");
-		FlowPanel dataPanel = new FlowPanel();
-		dataPanel.add(nameLabel);
-		dataPanel.add(name);
-		dataPanel.add(ageLabel);
-		dataPanel.add(age);
-		dataPanel.add(sendButton);
-		
-		mainPanel = new HorizontalSplitPanel();
-		mainPanel.setSize("500px", "200px");
-		mainPanel.setSplitPosition("250px");
-		mainPanel.setLeftWidget(connectPanel);
-		mainPanel.setRightWidget(dataPanel);
-		
-		RootPanel.get("container").add(mainPanel);
+		main = new MainWidget();	
+		RootPanel.get("container").add(main);
 
 	}
 	
@@ -140,13 +63,10 @@ public class Gwt_test implements EntryPoint {
 		
 		// We can set the id of a widget by accessing its Element
 		closeButton.getElement().setId("closeButton");
-		textToServerLabel = new Label();
 		
 		serverResponseLabel = new HTML();
 		dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
 		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
 		dialogVPanel.add(serverResponseLabel);
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
@@ -157,28 +77,23 @@ public class Gwt_test implements EntryPoint {
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				dialogBox.hide();
-				connectButton.setEnabled(true);
-				connectButton.setFocus(true);
+				getRows();
+				
 			}
 		});
 	}
 	
 	private void connectToServer() {
-		String textToServer = userNameField.getText() + "\n";
-		textToServer = textToServer + passwdField.getText() + "\n";
-		textToServer = textToServer + databaseNameField.getText() + "\n";
-		textToServer = textToServer + hostList.getValue(hostList.getSelectedIndex());
-
-		// Then, we send the input to the server.
-		connectButton.setEnabled(false);
-		textToServerLabel.setText(textToServer);
+		String databaseInfo = "root\nroot\nflipfop\nlocalhost:3306";
+		
+		System.out.println(databaseInfo);
+		
 		serverResponseLabel.setText("");
-		testService.callServer(textToServer,
-				new AsyncCallback<String>() {
-					public void onFailure(Throwable caught) {
+		testService.connectToDataBase(databaseInfo,
+					  new AsyncCallback<String>() {
+						public void onFailure(Throwable caught) {
 						// Show the RPC error message to the user
-						dialogBox
-								.setText("Remote Procedure Call - Failure");
+						dialogBox.setText("Remote Procedure Call - Failure");
 						serverResponseLabel
 								.addStyleName("serverResponseLabelError");
 						serverResponseLabel.setHTML(SERVER_ERROR);
@@ -197,7 +112,21 @@ public class Gwt_test implements EntryPoint {
 				});
 	}
 	
-	private void sendRecord() {
-		//Itt fogja küldeni az adatokat az adatbázisba!
+	private void getRows() {
+		
+		testService.getProducts(new AsyncCallback<List<ProductInfo>>() {
+						public void onFailure(Throwable caught) {
+							System.out.println("HIBA");
+					}
+
+					public void onSuccess(List<ProductInfo> result) {
+						if (result == null) {
+							System.out.println("result null");
+						}
+						else
+							main.populateProductList(result);
+					}
+
+				});
 	}
 }
