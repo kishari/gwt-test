@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="gwt-test" default="deploy" basedir=".">
+<dirname property="gwt-test.basedir" file="${ant.file.gwt-test}"/>
+
+	<property file="${gwt-test.basedir}/build.properties"/>
+	
+	<!-- Arguments to gwtc and devmode targets -->
+	<property name="gwt.args" value="" />
+	
+  	<property name="verbose" value="false"/> 
+  	<property name="lib" value="${basedir}/lib"/>
+  	<property name="dist.home" value="${basedir}/dist"/>
+  	<property name="build.home" value="${basedir}/war"/>
+  	<property name="autodeploy-dir" value="${glassfish.home}/domains/${glassfish.domain}/autodeploy" />
+  	<property name="gwt.sdk" location="${gwt.sdk.home}" />
+
+  	<property name="app.warname" value="gwttest.war"/>
+  	<property name="app.warfile" value="${dist.home}/${app.warname}"/>
+  	<property name="gwt.entrypointClass" value="hu.dbx.gwt.test.Gwt_test"/>
+
+  	<path id="classpath">
+    	<pathelement location="war/WEB-INF/classes"/>
+    	<pathelement location="${gwt.sdk}/gwt-user.jar"/>
+    	<fileset dir="${gwt.sdk}" includes="gwt-dev*.jar"/>
+    	<!-- Add any additional non-server libs (such as JUnit) -->
+    	<fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
+ 	 </path>
+
+  	<target name="libs" description="Copy libs to WEB-INF/lib">
+    	<mkdir dir="war/WEB-INF/lib" />
+    	<copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar" />
+    	<copy todir="war/WEB-INF/lib">
+    	 	<fileset dir="${lib}">
+    	 		<include name="*.jar"/>
+    	 	</fileset>
+    	</copy>
+  	</target>
+  
+  	<target name="clean">
+		<tstamp />
+		<delete dir="${dist.home}" />
+		<delete dir="${build.home}/WEB-INF/classes" />
+		<delete dir="${build.home}/gwt_test" />
+	</target>
+	
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build.home}/WEB-INF/classes" />
+		<mkdir dir="${dist.home}" />
+	</target>
+
+  	<target name="javac" depends="libs,init" description="Compile java source">
+    	<javac srcdir="src" includes="**"
+        	destdir="${build.home}/WEB-INF/classes"
+        	debug="true" verbose="${verbose}">
+      		<classpath refid="classpath"/>
+    	</javac>
+    	<copy todir="${build.home}/WEB-INF/classes">
+      		<fileset dir="src" excludes="**/*.java"/>
+    	</copy>
+  	</target>
+
+  	<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
+    	<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+      		<classpath>
+        		<pathelement location="src"/>
+        		<path refid="classpath"/>
+      		</classpath>
+      		<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+      		<jvmarg value="-Xmx256M"/>
+      		<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+      		<arg line="${gwt.args}"/>
+      		<arg value="${gwt.entrypointClass}"/>
+    	</java>
+  	</target>
+
+  	<target name="devmode" depends="javac" description="Run development mode">
+    	<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+      		<classpath>
+        		<pathelement location="src"/>
+        		<path refid="classpath"/>
+      		</classpath>
+      		<jvmarg value="-Xmx256M"/>
+      		<arg value="-startupUrl"/>
+      		<arg value="Gwt_test.html"/>
+      		<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+      		<arg line="${gwt.args}"/>
+      		<arg value="${gwt.entrypointClass}"/>
+   		 </java>
+  	</target>
+
+  	<target name="hosted" depends="devmode" description="Run development mode (NOTE: the 'hosted' target is deprecated)" />
+
+  	<target name="build" depends="gwtc" description="Build this project" />
+
+  	<target name="war" depends="build" description="Create a war file">
+    	<war warfile="${dist.home}/${app.warname}" basedir="${build.home}"/>
+  	</target>
+  	
+  	<target name="deploy" depends="war">
+	    <copy file="${app.warfile}" todir="${autodeploy-dir}" />
+	</target>
+
+</project>
+

@@ -2,7 +2,7 @@
 .settings
 .project
 *.class
-war
+war/WEB-INF/classes
 war/gwt_test
 test-classes
 dist
