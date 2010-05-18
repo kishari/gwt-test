@@ -1,0 +1,10 @@
+.classpath
+.settings
+.project
+*.class
+war
+war/gwt_test
+test-classes
+dist
+*~
+
