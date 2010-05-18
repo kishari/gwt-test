@@ -2,6 +2,7 @@
 .settings
 .project
 *.class
+lib
 war/WEB-INF/classes
 war/gwt_test
 test-classes
