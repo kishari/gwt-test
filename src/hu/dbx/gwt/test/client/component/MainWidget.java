@@ -69,7 +69,7 @@ public class MainWidget extends Composite {
 	Tree productList;
 	
 	@UiField
-	FlexTable productTable;
+	ProductTable productTable;
 	
 	public MainWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -137,44 +137,9 @@ public class MainWidget extends Composite {
 			}
 		});
 		
-		productTable.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (selected > 0) {
-					productTable.getRowFormatter().removeStyleName(selected,"productTableSelected");
-					productTable.getRowFormatter().addStyleName(selected,"productTableRow");
-				}
-				selected = productTable.getCellForEvent(event).getRowIndex();
-				if (selected != 0) {
-					productTable.getRowFormatter().addStyleName(selected,"productTableSelected");
-					productTable.getRowFormatter().removeStyleName(selected,"productTableRow");
-				}
-			}
-			
-		});
 	}
-	
-	public void populateProductTable(List<ProductInfo> products) {
-		if (products != null) {
-			Iterator<ProductInfo> i = products.iterator();
-			int row = 0;
-			productTable.setStyleName("productTable");
-			productTable.getRowFormatter().addStyleName(0, "productTableHeader");
-			productTable.setText(row, 0, "ProductCode");
-			productTable.setText(row, 1, "Description");
-
-			
-			row++;
-			while(i.hasNext()) {
-				ProductInfo p = i.next();
-				int col = 0;
-				productTable.getRowFormatter().addStyleName(row, "productTableRow");
-				productTable.setText(row, col++, p.getProductCode());
-				productTable.setText(row, col++, p.getDescription());
-				row++;
-			}
-		}
+	public void populateTable(List<ProductInfo> r) {
+		productTable.populateProductTable(r);
 	}
 
 }

@@ -127,7 +127,7 @@ public class Gwt_test implements EntryPoint {
 						}
 						else {
 							setProductList(result);
-							mainWindow.populateProductTable(result);
+							mainWindow.populateTable(result);
 						}
 					}
 
