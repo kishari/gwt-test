@@ -1,48 +1,75 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:own="urn:import:hu.dbx.gwt.test.client.component">
 	<ui:style>
 		.parentPanel {
 			position: absolute;
 			width: 100%;
-			height: 90%;
+			height: 100%;
+		}
+		.mainPanel {
+			position: absolute;
+			background-color: khaki;
+			width: 100%;
+			height:  100%;
 		}
 		.childPanel {
-			position: absolute;
+			position: absolute;			
 			width: 100%;
 			height:  100%;
 		}
 		.button {
-			display: block;
 			font-size: 10pt;
 			width: 60px;
+			height: 28px;
 		}
 		.label {
 			width: 80px;
 			font-size: 10pt;
 		}
+		
+		.mainHeader {
+			background-color: orange;
+			width: 100%;
+			text-valign: middle;
+		}
+		.mainFooter {
+			background-color: orange;
+			width: 100%;
+		}
 	</ui:style>
 	
 	<g:DeckPanel ui:field='parentPanel' styleName="{style.parentPanel}">
-    	<g:DockLayoutPanel unit="EM" ui:field='firstPanel' styleName="{style.childPanel}">
-    		<g:north size="3">
-    			<g:HorizontalPanel spacing="1" >
-    				<g:Button ui:field='newButton' styleName="{style.button}" >New</g:Button>
-    			</g:HorizontalPanel>
+    	<g:DockLayoutPanel unit="PX" ui:field='mainPanel' styleName="{style.mainPanel}">
+    		<g:north size="30">
+    			<g:FlowPanel styleName="{style.mainHeader}">
+    				<g:Button ui:field='newButton' styleName="{style.button}">New</g:Button>
+    			</g:FlowPanel>
     		</g:north>
-    		<g:center size="20">
-    			<g:Tree ui:field='productList' animationEnabled="true"></g:Tree>
+    		<g:center>
+    			<g:VerticalPanel styleName="{style.childPanel}">
+    				<g:FlexTable ui:field="productTable"></g:FlexTable>
+    			</g:VerticalPanel>
     		</g:center>
+    		<g:south size="30">
+    			<g:HorizontalPanel spacing="1" styleName="{style.mainFooter}">
+    			</g:HorizontalPanel>
+    		</g:south>
 		</g:DockLayoutPanel>
 		
-    	<g:DockLayoutPanel unit="EM" ui:field='secondPanel' styleName="{style.childPanel}">
-    		<g:north size="8">
+    	<g:DockLayoutPanel unit="PX" ui:field='secondPanel' styleName="{style.mainPanel}">
+    		<g:north size="30" >
+    			<g:FlowPanel styleName="{style.mainHeader}">
+    				<g:Button ui:field='saveButton' styleName="{style.button}">Save</g:Button>
+    				<g:Button ui:field='cancelButton' styleName="{style.button}">Cancel</g:Button>
+    			</g:FlowPanel>
+    		</g:north>    		
+    		<g:center>
     			<g:VerticalPanel>
     				<g:HorizontalPanel spacing="1" >
-    					<g:Button ui:field='saveButton' styleName="{style.button}">Save</g:Button>
-    					<g:Button ui:field='cancelButton' styleName="{style.button}">Cancel</g:Button>
     				</g:HorizontalPanel>
-    				<g:HorizontalPanel spacing="2">
+    				<g:HorizontalPanel ui:field="hor" spacing="2">
     					<g:Label styleName="{style.label}">name: </g:Label>
     					<g:TextBox></g:TextBox>
     				</g:HorizontalPanel>
@@ -51,17 +78,17 @@
     					<g:TextBox></g:TextBox>
     				</g:HorizontalPanel>
     			</g:VerticalPanel>
-    		</g:north>
-    		<g:south size="3">
-    			<g:HorizontalPanel spacing="1" >
+    		</g:center>
+    		<g:south size="30">
+    			<g:FlowPanel styleName="{style.mainFooter}" >
     				<g:Button ui:field='addNewVersionButton' styleName="{style.button}">+</g:Button>
     				<g:Button ui:field='removeVersionButton' styleName="{style.button}">-</g:Button>
     			    <g:Button ui:field='testButton' styleName="{style.button}">Test</g:Button>
     				<g:Button ui:field='editButton' styleName="{style.button}">Edit</g:Button>
-    			</g:HorizontalPanel>
+    			</g:FlowPanel>
     		</g:south>
 		</g:DockLayoutPanel>
-		<g:DockLayoutPanel unit="EM" ui:field='thirdPanel' styleName="{style.childPanel}">
+		<g:DockLayoutPanel unit="EM" ui:field='thirdPanel' styleName="{style.mainPanel}">
 			<g:north size="15">
 				<g:VerticalPanel>
     				<g:HorizontalPanel spacing="1" >

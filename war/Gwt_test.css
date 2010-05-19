@@ -2,16 +2,9 @@
 
 
 /** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
-}
 
 .container {
-	position: absolute;
+	width: 100%;
 	height: 100%;
 	
 }
@@ -25,8 +18,42 @@ h1 {
   margin: 5px;
 }
 
-.serverResponseLabelError {
-  color: red;
+.productTable{
+			font-size:20pt;
+			width: 100%;
+			border-collapse: collapse;
+}
+
+.productTableRow {
+}
+
+.productTableRow td {
+		border: 1px solid #eee;
+		height: 30px;
+		font-size:15pt;
+		font-weight: normal;
+}
+
+.productTableHeader{
+		font-size:20pt;
+		font-weight: bold;
+		background-color: orange;
+}
+
+.productTableHeader td {
+		font-size:15pt;
+		height: 30px;
+}
+
+.productTableSelected{
+
+}
+
+.productTableSelected td {
+		font-size:15pt;
+		height: 30px;
+		background-color: lightgrey;
+		border: 1px solid #eee;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */

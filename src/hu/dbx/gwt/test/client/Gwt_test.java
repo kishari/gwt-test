@@ -1,5 +1,6 @@
 package hu.dbx.gwt.test.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import hu.dbx.gwt.test.client.component.MainWidget;
@@ -35,22 +36,23 @@ public class Gwt_test implements EntryPoint {
 	private Button closeButton;
 	private HTML serverResponseLabel;
 	private VerticalPanel dialogVPanel;
-	private MainWidget main;
+	private MainWidget mainWindow;
 	
 	private DialogBox dialogBox;
+	
+	private List<ProductInfo> products;
 	
 	public void onModuleLoad() {
 		
 		init();
 		connectToServer();
-		
 	}
 	
 	private void init() {
 		createDialogBox();
 		
-		main = new MainWidget();	
-		RootPanel.get("container").add(main);
+		mainWindow = new MainWidget();
+		RootPanel.get("container").add(mainWindow);
 
 	}
 	
@@ -77,7 +79,6 @@ public class Gwt_test implements EntryPoint {
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				dialogBox.hide();
-				getRows();
 				
 			}
 		});
@@ -102,12 +103,13 @@ public class Gwt_test implements EntryPoint {
 					}
 
 					public void onSuccess(String result) {
-						dialogBox.setText("Remote Procedure Call");
+			/*			dialogBox.setText("Remote Procedure Call");
 						serverResponseLabel
 								.removeStyleName("serverResponseLabelError");
 						serverResponseLabel.setHTML(result);
 						dialogBox.center();
 						closeButton.setFocus(true);
+				*/		getRows();
 					}
 				});
 	}
@@ -123,10 +125,20 @@ public class Gwt_test implements EntryPoint {
 						if (result == null) {
 							System.out.println("result null");
 						}
-						else
-							main.populateProductList(result);
+						else {
+							setProductList(result);
+							mainWindow.populateProductTable(result);
+						}
 					}
 
 				});
+	}
+	
+	public void setProductList(List<ProductInfo> productList) {
+		this.products = new ArrayList<ProductInfo>(productList);
+	}
+	
+	public List<ProductInfo> getProductList() {
+		return this.products;
 	}
 }
