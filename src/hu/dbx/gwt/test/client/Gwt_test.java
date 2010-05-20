@@ -87,8 +87,6 @@ public class Gwt_test implements EntryPoint {
 	private void connectToServer() {
 		String databaseInfo = "root\nroot\nflipfop\nlocalhost:3306";
 		
-		System.out.println(databaseInfo);
-		
 		serverResponseLabel.setText("");
 		testService.connectToDataBase(databaseInfo,
 					  new AsyncCallback<String>() {
@@ -118,7 +116,8 @@ public class Gwt_test implements EntryPoint {
 		
 		testService.getProducts(new AsyncCallback<List<ProductInfo>>() {
 						public void onFailure(Throwable caught) {
-							System.out.println("HIBA");
+							System.out.println("HIBA a táblázat sorainak lekérésénél!"
+									+ this.getClass().getName() + " Gwt_test.getRows()");
 					}
 
 					public void onSuccess(List<ProductInfo> result) {
@@ -126,6 +125,7 @@ public class Gwt_test implements EntryPoint {
 							System.out.println("result null");
 						}
 						else {
+							//System.out.println("getRows Success " + this.getClass().getName());
 							setProductList(result);
 							mainWindow.populateTable(result);
 						}

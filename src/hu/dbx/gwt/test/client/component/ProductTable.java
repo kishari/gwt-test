@@ -40,16 +40,16 @@ public class ProductTable extends Composite {
 		productTable.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
+				String style = selectionStyle.selectedRow();
 				if (selectedRow > 0) {					
-					productTable.getRowFormatter().removeStyleName(selectedRow, "productTableSelected");
+					productTable.getRowFormatter().removeStyleName(selectedRow, style);
 					productTable.getRowFormatter().addStyleName(selectedRow, "productTableRow");
 				}	
 				selectedRow = productTable.getCellForEvent(event).getRowIndex();
 				if (selectedRow > 0) {
 					productTable.getRowFormatter().removeStyleName(selectedRow, "productTableRow");
-					productTable.getRowFormatter().addStyleName(selectedRow, "productTableSelected");
-				}
-				
+					productTable.getRowFormatter().addStyleName(selectedRow, style);
+				}	
 			}			
 		});
 	}
@@ -74,6 +74,4 @@ public class ProductTable extends Composite {
 		}
 	}
 	
-	
-
 }

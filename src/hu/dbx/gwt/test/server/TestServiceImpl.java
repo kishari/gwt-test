@@ -16,10 +16,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class TestServiceImpl extends RemoteServiceServlet implements
 		TestService {
 
-	DBUtil db;
 	public String connectToDataBase(String databaseInfo) throws IllegalArgumentException {
-		db = new DBUtil();
-		boolean result = db.connect(databaseInfo);
+		DBUtil.init(databaseInfo);
+		boolean result = DBUtil.connect();
 		String response = new String();
 		response = "You call the service with:<br> " + databaseInfo + "<br>result: " + result;
 		
@@ -29,7 +28,7 @@ public class TestServiceImpl extends RemoteServiceServlet implements
 	public List<ProductInfo> getProducts() throws IllegalArgumentException {
 		
 		
-		List<ProductInfo> info = db.getRows();
+		List<ProductInfo> info = DBUtil.executeSelect(DBUtil.Select.GET_PRODUCTS);
 		if (info == null) {
 			System.out.println("lekérdezés null eredmény");
 		}

@@ -18,10 +18,10 @@
   	}
 
   	.selectedRow td {
-    	font-size:15pt;
+  		font-size:15pt;
+  		border-top: 1px solid #88a4d6;
+    	border-bottom: 1px solid #7b97d0;
 		height: 30px;
-		background-color: lightgrey;
-		border: 1px solid #eee;
   	}
   </ui:style>
 	

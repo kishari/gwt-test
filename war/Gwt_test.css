@@ -33,14 +33,13 @@
 		}
 
 		.productTableRow td {
+			font-size:15pt;
 			border: 1px solid #eee;
 			height: 30px;
-			font-size:15pt;
 			font-weight: normal;
 		}
 
 		.productTableHeader{
-			font-size:20pt;
 			font-weight: bold;
 			background-color: orange;
 		}
@@ -48,14 +47,4 @@
 		.productTableHeader td {
 			font-size:15pt;
 			height: 30px;
-		}
-
-		.productTableSelected{
-		}
-
-		.productTableSelected td {
-			font-size:15pt;
-			height: 30px;
-			background-color: lightgrey;
-			border: 1px solid #eee;
 		}

@@ -2,7 +2,6 @@ package hu.dbx.gwt.test.client.component;
 
 import hu.dbx.gwt.test.shared.ProductInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -10,33 +9,40 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 public class MainWidget extends Composite {
 
-	private static MainWidgetUiBinder uiBinder = GWT
-			.create(MainWidgetUiBinder.class);
+	private static MainWidgetUiBinder uiBinder = GWT.create(MainWidgetUiBinder.class);
 	
 	interface MainWidgetUiBinder extends UiBinder<Widget, MainWidget> { }
 
-	private int selected = -1;
 	@UiField 
 	DeckPanel parentPanel;
 	
 	@UiField
-	DockLayoutPanel mainPanel;
-	
-	//@UiField
-	DockLayoutPanel secondPanel;
+	FormPanel xslUploadForm;
 	
 	@UiField
-	DockLayoutPanel thirdPanel;
+	FileUpload xslFileUpload;
+	
+	@UiField
+	TextBox xslName;
+	
+	@UiField
+	TextArea xslDescription;
 	
 	@UiField
 	Button newButton;
@@ -65,19 +71,21 @@ public class MainWidget extends Composite {
 	@UiField
 	Button removeVersionButton;
 
-//	@UiField 
-	Tree productList;
-	
 	@UiField
 	ProductTable productTable;
 	
 	public MainWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
+		xslUploadForm.setAction(GWT.getModuleBaseURL() + "FileUploadServlet");
+		xslUploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+		xslUploadForm.setMethod(FormPanel.METHOD_POST);
+		
 		init();	
 	}
 	
 	private void init() {
 		setButtonClickHandler();
+		setUploadFormHandler();
 		
 		parentPanel.showWidget(0);
 	}
@@ -113,9 +121,10 @@ public class MainWidget extends Composite {
 			}
 		});
 		
-		saveButton2.addClickHandler(new ClickHandler() {
+		saveButton2.addClickHandler(new ClickHandler(){
+			@Override
 			public void onClick(ClickEvent event) {
-				
+				xslUploadForm.submit();
 			}
 		});
 		
@@ -138,6 +147,31 @@ public class MainWidget extends Composite {
 		});
 		
 	}
+	
+	private void setUploadFormHandler() {
+		xslUploadForm.addSubmitHandler(new SubmitHandler() {
+			@Override
+			public void onSubmit(SubmitEvent event) {
+				if ("".equals(xslName.getText()) ||
+					"".equals(xslDescription.getText()) ||
+					"".equals(xslFileUpload.getFilename())) {
+						Window.alert("Minden mező kitöltése kötelező!");
+						event.cancel();
+				}
+			}
+	    });
+	    
+		xslUploadForm.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				String temp = event.getResults();
+				temp = temp.substring("<pre>".length(), temp.length() - "</pre>".length());
+		        Window.alert(temp);
+		        
+			}
+		});
+	}
+	
 	public void populateTable(List<ProductInfo> r) {
 		productTable.populateProductTable(r);
 	}

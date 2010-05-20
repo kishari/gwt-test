@@ -11,9 +11,19 @@
     <servlet-class>hu.dbx.gwt.test.server.TestServiceImpl</servlet-class>
   </servlet>
   
+  <servlet>
+    <servlet-name>fileUploadServlet</servlet-name>
+    <servlet-class>hu.dbx.gwt.test.server.FileUploadServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>testServlet</servlet-name>
     <url-pattern>/gwt_test/test</url-pattern>
+  </servlet-mapping>
+  
+   <servlet-mapping>
+    <servlet-name>fileUploadServlet</servlet-name>
+    <url-pattern>/gwt_test/FileUploadServlet</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

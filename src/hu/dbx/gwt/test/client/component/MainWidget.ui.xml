@@ -41,7 +41,7 @@
 	</ui:style>
 	
 	<g:DeckPanel ui:field='parentPanel' styleName="{style.parentPanel}">
-    	<g:DockLayoutPanel unit="PX" ui:field='mainPanel' styleName="{style.mainPanel}">
+    	<g:DockLayoutPanel unit="PX" styleName="{style.mainPanel}">
     		<g:north size="30">
     			<g:FlowPanel styleName="{style.mainHeader}">
     				<g:Button ui:field='newButton' styleName="{style.button}">New</g:Button>
@@ -56,7 +56,7 @@
     		</g:south>
 		</g:DockLayoutPanel>
 		
-    	<g:DockLayoutPanel unit="PX" ui:field='secondPanel' styleName="{style.mainPanel}">
+    	<g:DockLayoutPanel unit="PX" styleName="{style.mainPanel}">
     		<g:north size="30" >
     			<g:FlowPanel styleName="{style.mainHeader}">
     				<g:Button ui:field='saveButton' styleName="{style.button}">Save</g:Button>
@@ -69,11 +69,11 @@
     				</g:HorizontalPanel>
     				<g:HorizontalPanel ui:field="hor" spacing="2">
     					<g:Label styleName="{style.label}">name: </g:Label>
-    					<g:TextBox></g:TextBox>
+    					<g:TextBox visibleLength="31" maxLength="50"></g:TextBox>
     				</g:HorizontalPanel>
     				<g:HorizontalPanel spacing="2">
     					<g:Label styleName="{style.label}">description: </g:Label>
-    					<g:TextBox></g:TextBox>
+    					<g:TextArea characterWidth="35" visibleLines="5"></g:TextArea>
     				</g:HorizontalPanel>
     			</g:VerticalPanel>
     		</g:center>
@@ -86,31 +86,35 @@
     			</g:FlowPanel>
     		</g:south>
 		</g:DockLayoutPanel>
-		<g:DockLayoutPanel unit="EM" ui:field='thirdPanel' styleName="{style.mainPanel}">
-			<g:north size="15">
-				<g:VerticalPanel>
-    				<g:HorizontalPanel spacing="1" >
-    					<g:Button ui:field='saveButton2' styleName="{style.button}">Save</g:Button>
-    					<g:Button ui:field='cancelButton2' styleName="{style.button}">Cancel</g:Button>
-    				</g:HorizontalPanel>
-    				<g:HorizontalPanel spacing="2">
-    					<g:Label styleName="{style.label}">name: </g:Label>
-    					<g:TextBox></g:TextBox>
-    				</g:HorizontalPanel>
-    				<g:HorizontalPanel spacing="2">
-    					<g:Label styleName="{style.label}">description: </g:Label>
-    					<g:TextBox></g:TextBox>
-    				</g:HorizontalPanel>
-    				<g:HorizontalPanel spacing="2">
-    					<g:Label styleName="{style.label}">XSL: </g:Label>
-    					<g:FileUpload></g:FileUpload>
-    				</g:HorizontalPanel>
-    				<g:HorizontalPanel spacing="2">
-    					<g:Label styleName="{style.label}">XSD: </g:Label>
-    					<g:FileUpload></g:FileUpload>
-    				</g:HorizontalPanel>
-    			</g:VerticalPanel>
-    		</g:north>
+		<g:DockLayoutPanel unit="PX" styleName="{style.mainPanel}">
+			<g:north size="30">
+				<g:FlowPanel styleName="{style.mainHeader}">
+    				<g:Button ui:field='saveButton2' styleName="{style.button}">Save</g:Button>
+    				<g:Button ui:field='cancelButton2' styleName="{style.button}">Cancel</g:Button>
+    			</g:FlowPanel>
+			</g:north>
+			<g:center>
+				<g:FormPanel ui:field="xslUploadForm">
+					<g:VerticalPanel>
+						<g:HorizontalPanel spacing="2" height="30px">
+    						<g:Label styleName="{style.label}">name: </g:Label>
+    						<g:TextBox ui:field="xslName" name="nameFormElement" visibleLength="31" maxLength="50"></g:TextBox>
+    					</g:HorizontalPanel>
+    					<g:HorizontalPanel spacing="2" height="30px">
+    						<g:Label styleName="{style.label}">description: </g:Label>
+    						<g:TextArea ui:field="xslDescription" name="descFormElement" characterWidth="36" visibleLines="5"></g:TextArea>
+    					</g:HorizontalPanel>
+    					<g:HorizontalPanel spacing="2" height="30px">
+    						<g:Label styleName="{style.label}">XSL: </g:Label>
+    						<g:FileUpload ui:field="xslFileUpload" name="fileFormElement"></g:FileUpload>
+    					</g:HorizontalPanel>
+    				</g:VerticalPanel>
+    			</g:FormPanel>
+    		</g:center>
+    		<g:south size="30">
+    			<g:HorizontalPanel spacing="1" styleName="{style.mainFooter}">
+    			</g:HorizontalPanel>
+    		</g:south>
 		</g:DockLayoutPanel>
   </g:DeckPanel>
 

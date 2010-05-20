@@ -11,20 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBUtil {
+	
+	public static enum Select {
+		GET_PRODUCTS
+	}
  // selects
-    private static final String GET_CONTACTS = "select name, description from flipfop.templates";
+    private static final String GET_PRODUCTS = "select name, description from flipfop.templates";
     
-    private String databaseInfo;
+    private static String databaseInfo;
     
-    private Connection connection = null;
+    private static Connection connection = null;
     
-    public DBUtil() {
-    	
+    public static void init(String dbInfo) {
+    	databaseInfo = dbInfo;
     }
     
-    public boolean connect(String databaseInfo) {
+    public static boolean connect() {
     	try {
-			connection = getConnection(databaseInfo);
+			connection = createConnection(databaseInfo);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,7 +39,16 @@ public class DBUtil {
     	return false;
     }
  
-    public List<ProductInfo> getRows() {
+    public static List<ProductInfo> executeSelect(Select value) {
+    	String query = new String();
+    	switch(value) {
+    		case GET_PRODUCTS:
+    					query = GET_PRODUCTS;
+    					break;
+    		default:
+    					break;
+    	
+    	}
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -44,8 +57,7 @@ public class DBUtil {
         if (connection == null) {    }
         
         try {
-        	
-            pstmt = connection.prepareStatement(GET_CONTACTS);
+            pstmt = connection.prepareStatement(query);
             
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -71,7 +83,7 @@ public class DBUtil {
         return ret;
     }
     
-    private Connection getConnection(String databaseInfo) throws SQLException {
+    private static Connection createConnection(String databaseInfo) throws SQLException {
     	Connection conn = null;
     	
     	String [] data;
@@ -92,6 +104,10 @@ public class DBUtil {
         } catch (Exception e) { }
         
         return conn;
+    }
+    
+    public static Connection getConnection() {
+    	return connection;
     }
 
 }
